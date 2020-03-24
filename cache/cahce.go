@@ -21,6 +21,7 @@ type CacheInterface interface {
 	All() map[string]string
 	Len() int
 	Dump()
+	LoadData()
 }
 
 func NewMCache() *MCache {

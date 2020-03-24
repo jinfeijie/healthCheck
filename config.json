@@ -1,0 +1,20 @@
+{
+  "check_interval": 500,
+  "notify_interval": 60000,
+  "site": [
+    {
+      "domain": "https://baidu.com",
+      "check_interval": 500,
+      "notify": [
+        "jinfeijie@100.me"
+      ],
+      "notify_interval": 60000,
+      "notify_format": "你的网站%s，状态%d，时间：%s",
+      "notify_params": [
+        "domain",
+        "status_code",
+        "time"
+      ]
+    }
+  ]
+}

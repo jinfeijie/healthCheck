@@ -36,8 +36,8 @@ func main() {
 	for {
 		ret := gjson.Parse(mc.Get("site"))
 		for _, site := range ret.Array() {
-			go func() {
-				for i := 0; i < 10; i++ {
+			go func(site gjson.Result) {
+				for {
 					domain := site.Get("domain")
 					name := site.Get("name")
 					notifyStr := site.Get("notify")
@@ -46,13 +46,13 @@ func main() {
 					result := site.Get("result")
 					resp, err := http.Get(domain.String())
 					if err != nil {
-						fmt.Println(err.Error())
-						continue
+						Echo(err.Error())
+						return
 					}
 					pong, err := ioutil.ReadAll(resp.Body)
 					if err != nil {
-						fmt.Println(err.Error())
-						continue
+						Echo(err.Error())
+						return
 					}
 					resp.Body.Close()
 					if string(pong) != result.String() {
@@ -65,16 +65,15 @@ func main() {
 							m.Unlock()
 						}
 					}
-
+					Echo(domain.String(), string(pong))
 					checkInterval, err := strconv.Atoi(mc.Get("check_interval"))
-
-					for i := 0; i < checkInterval; i++ {
-						<-time.After(time.Microsecond)
+					for delay := 0; delay < checkInterval; delay++ {
+						<-time.After(time.Second)
 					}
 				}
-			}()
+			}(site)
 		}
-		<-time.After(time.Second)
+		<-time.After(time.Minute)
 	}
 }
 
@@ -118,19 +117,28 @@ func Notify(notify []gjson.Result, name, notifyFormat, domain string) {
 
 	jsonStr, err := json.Marshal(content)
 	if err != nil {
-		panic(err.Error())
+		Echo(err.Error())
+		return
 	}
 
+	Echo(mc.Get("email_server") + "?" + u.Encode())
 	resp, err := http.Post(mc.Get("email_server")+"?"+u.Encode(), "application/json", bytes.NewBuffer(jsonStr))
 	if err != nil {
-		panic(err.Error())
+		Echo(err.Error())
+		return
 	}
 
 	rep, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err.Error())
+		Echo(err.Error())
+		return
 	}
 
-	fmt.Println(string(rep))
+	Echo(string(rep))
+}
 
+func Echo(data ...interface{}) {
+	if mc.Get("mod") == "debug" {
+		fmt.Println(time.Now().Format("2006-1-2 15:04:05"), data)
+	}
 }

@@ -43,6 +43,9 @@ func (mc *MCache) Get(key string) string {
 	mc.RLock()
 	defer mc.RUnlock()
 
+	if !mc.IsExist(key) {
+		return ""
+	}
 	return mc.Data[key]
 }
 
@@ -72,7 +75,7 @@ func (mc *MCache) All() map[string]string {
 	defer mc.RUnlock()
 
 	allData := make(map[string]string)
-	for key,value := range mc.Data {
+	for key, value := range mc.Data {
 		allData[key] = value
 	}
 	return allData

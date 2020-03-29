@@ -1,0 +1,20 @@
+{
+  "app_name": "MJ-Health",
+  "check_interval": 500,
+  "mod": "debug",
+  "email_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODc2NTUyOTksImlkIjoxLCJvcmlnX2lhdCI6MTU4NTA2MzI5OSwidXNlcm5hbWUiOiJmaiBqaW4ifQ.iVUkeyowxQMhaU8CYEqdB6PPAIkiihBe9iVjS9rFYmc",
+  "email_server": "http://push.strcpy.cn/mail/free_send",
+  "site": [
+    {
+      "name": "金斐杰的网站",
+      "domain": "https://jinfeijie.cn/a.php",
+      "notify": [
+        "me@jinfeijie.cn"
+      ],
+      "notify_interval": 600,
+      "time_out": 500,
+      "notify_format": "%s <br> 网站：%s 异常<br>时间：%s",
+      "result": "pong"
+    }
+  ]
+}

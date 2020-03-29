@@ -13,7 +13,7 @@ type MCache struct {
 	sync.RWMutex
 }
 
-type CacheInterface interface {
+type Interface interface {
 	Set(key, value string) bool
 	Get(key string) string
 	IsExist(key string) bool
@@ -24,11 +24,24 @@ type CacheInterface interface {
 	LoadData()
 }
 
+var once sync.Once
+var mc *MCache
+
 func NewMCache() *MCache {
 	data := make(map[string]string)
 	return &MCache{
 		Data: data,
 	}
+}
+
+func NewInstanceMCache() *MCache {
+	data := make(map[string]string)
+	once.Do(func() {
+		mc = &MCache{
+			Data: data,
+		}
+	})
+	return mc
 }
 
 func (mc *MCache) Set(key, value string) bool {

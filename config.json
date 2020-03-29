@@ -1,13 +1,15 @@
 {
-  "check_interval": 500,
+  "mod": "debug",
+  "app_name": "MJ-Health",
+  "check_interval": 10,
   "email_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODc2NTUyOTksImlkIjoxLCJvcmlnX2lhdCI6MTU4NTA2MzI5OSwidXNlcm5hbWUiOiJmaiBqaW4ifQ.iVUkeyowxQMhaU8CYEqdB6PPAIkiihBe9iVjS9rFYmc",
   "email_server": "http://push.strcpy.cn/mail/free_send",
   "site": [
     {
-      "name": "google Service",
-      "domain": "http://google.com/ping",
+      "name": "site name",
+      "domain": "https://domain.com/ping",
       "notify": [
-        "me@jinfeijie.cn"
+        "your@email.com"
       ],
       "notify_interval": 600,
       "notify_format": "%s <br> 网站：%s 异常<br>时间：%s",

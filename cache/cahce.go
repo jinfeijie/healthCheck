@@ -121,6 +121,8 @@ func (mc *MCache) LoadData() {
 	f, _ := os.OpenFile("config.json", os.O_RDWR, 0666)
 	content, err := ioutil.ReadAll(f)
 	str := gjson.Parse(string(content))
+	mc.Lock()
+	defer mc.Unlock()
 	str.ForEach(func(key, value gjson.Result) bool {
 		mc.Data[key.String()] = value.String()
 		return true

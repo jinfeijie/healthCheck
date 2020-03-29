@@ -131,5 +131,20 @@ func TestBatchAction(t *testing.T) {
 		}
 	}(c)
 
-	<- time.After(time.Minute)
+
+	go func(c *MCache) {
+		for {
+			c.Len()
+			fmt.Println("Len")
+		}
+	}(c)
+
+	go func(c *MCache) {
+		for {
+			c.LoadData()
+			fmt.Println("LoadData")
+		}
+	}(c)
+
+	<- time.After(time.Minute * 5)
 }

@@ -32,6 +32,17 @@ func init() {
 }
 
 func main() {
+	defer func() {
+		if err := recover(); err != nil {
+			echo.Echo(err)
+			healthCheck() // 重新拉起来
+		}
+	}()
+
+	healthCheck()
+}
+
+func healthCheck() {
 	for {
 		ret := gjson.Parse(mc.Get("site"))
 		// 遍历配置监控站点

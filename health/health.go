@@ -17,11 +17,11 @@ func NewHealth(domain string) *Health {
 
 func (h *Health) Ping() string {
 	resp, err := http.Get(h.Domain)
-	defer resp.Body.Close()
 	if err != nil {
 		echo.Echo(err.Error())
 		return ""
 	}
+	defer resp.Body.Close()
 
 	pong, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

@@ -56,10 +56,10 @@ func (mc *MCache) Get(key string) string {
 	mc.RLock()
 	defer mc.RUnlock()
 
-	if !mc.IsExist(key) {
-		return ""
+	if val, ok := mc.Data[key]; ok {
+		return val
 	}
-	return mc.Data[key]
+	return ""
 }
 
 func (mc *MCache) IsExist(key string) bool {

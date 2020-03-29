@@ -1,12 +1,16 @@
 package cache
 
-import "testing"
+import (
+	"fmt"
+	uuid2 "github.com/hashicorp/go-uuid"
+	"testing"
+	"time"
+)
 
 func TestNewInstanceMCache(t *testing.T) {
 	mc := NewInstanceMCache()
 	mc.LoadData()
 	mc2 := NewInstanceMCache()
-
 
 	if mc.Get("app_name") != mc2.Get("app_name") {
 		t.Logf("mc:%s  mc2:%s", mc.Get("app_name"), mc2.Get("app_name"))
@@ -21,7 +25,6 @@ func TestNewMCache(t *testing.T) {
 	mc.LoadData()
 	mc2 := NewMCache()
 
-
 	if mc.Get("app_name") != mc2.Get("app_name") {
 		t.Logf("mc:%s  mc2:%s", mc.Get("app_name"), mc2.Get("app_name"))
 		t.Fail()
@@ -35,7 +38,6 @@ func TestNewMCache2(t *testing.T) {
 	mc.LoadData()
 	mc2 := NewMCache()
 	mc2.LoadData()
-
 
 	if mc.Get("app_name") != mc2.Get("app_name") {
 		t.Logf("mc:%s  mc2:%s", mc.Get("app_name"), mc2.Get("app_name"))
@@ -62,8 +64,6 @@ func TestInstanceCacheAllMethod(t *testing.T) {
 	t.Log(mc.IsExist("test"))
 
 	t.Log(mc.All())
-
-
 }
 
 func TestCacheAllMethod(t *testing.T) {
@@ -84,5 +84,52 @@ func TestCacheAllMethod(t *testing.T) {
 
 	t.Log(mc.All())
 
+}
 
+func TestBatchAction(t *testing.T) {
+	c := NewInstanceMCache()
+	c.LoadData()
+
+	go func(c *MCache) {
+		for {
+			fmt.Println("Get", c.Get("test"))
+		}
+	}(c)
+
+	go func(c *MCache) {
+		for {
+			uuid, err := uuid2.GenerateUUID()
+			if err != nil {
+				fmt.Println(err.Error())
+				uuid = ""
+			}
+			c.Set("test", uuid)
+			fmt.Println("Set")
+		}
+	}(c)
+
+	go func(c *MCache) {
+		for {
+			c.IsExist("test")
+			fmt.Println("IsExist")
+		}
+	}(c)
+
+	go func(c *MCache) {
+		for {
+			c.Del("test")
+			fmt.Println("Del")
+		}
+	}(c)
+
+	go func(c *MCache) {
+		for {
+			for _, _ = range c.All() {
+
+			}
+			fmt.Println("Range")
+		}
+	}(c)
+
+	<- time.After(time.Minute)
 }
